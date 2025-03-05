@@ -1,4 +1,5 @@
 import { Feature as olFeature, Collection as olCollection, Overlay as olOverlay } from 'ol';
+import OLCesium from 'olcs/OLCesium';
 import * as olGeom from 'ol/geom';
 import { fromCircle, fromExtent } from 'ol/geom/Polygon';
 import * as olInteraction from 'ol/interaction';
@@ -31,8 +32,11 @@ import * as Loader from './src/loading';
 import Spinner from './src/utils/spinner';
 import layerType from './src/layer/layertype';
 
+
+
 const Origo = function Origo(configPath, options = {}) {
   /** Reference to the returned Component */
+  window.OLCesium = OLCesium;
   let origo;
   let viewer;
   const origoConfig = {
