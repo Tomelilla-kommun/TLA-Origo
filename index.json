@@ -297,8 +297,6 @@
 		"source": "data/origo-cities-3857.geojson",
 		"style": "origo-logo",
 		"type": "GEOJSON",
-		"HeightReference": "CLAMP_TO_GROUND",
-		"clampToGround": true,
 		"attributes": [
 		  {
 			"name": "name"

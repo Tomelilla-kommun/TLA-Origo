@@ -9,7 +9,7 @@
   "extensions": [ "octvertexnormals" ],
   "tiles": [ "{z}/{x}/{y}.terrain?v={version}" ],
   "projection": "EPSG:4326",
-  "bounds": [ 10.0, 55.0, 20.0, 60.0 ],
+  "bounds": [ 0.00, -90.00, 180.00, 90.00 ],
   "available": [
     [ { "startX": 0, "startY": 0, "endX": 1, "endY": 0 } ]
    ,[ { "startX": 2, "startY": 1, "endX": 2, "endY": 1 } ]
