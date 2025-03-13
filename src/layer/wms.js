@@ -3,8 +3,11 @@ import ImageWMSSource from 'ol/source/ImageWMS';
 import tile from './tile';
 import maputils from '../maputils';
 import image from './image';
+import { get as getProjection } from 'ol/proj';
+import { createXYZ } from 'ol/tilegrid';
 
 function createTileSource(options) {
+  console.log(options)
   const sourceOptions = {
     attributions: options.attribution,
     url: options.url,
@@ -20,6 +23,10 @@ function createTileSource(options) {
       STYLES: options.style
     }
   };
+  sourceOptions.tileGrid = createXYZ({
+    extent: getProjection('EPSG:3857').getExtent(),
+    tileSize: 256
+  });
   if (options.imageLoadFunction) {
     sourceOptions.tileLoadFunction = options.imageLoadFunction;
   }
