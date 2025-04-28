@@ -1,4 +1,4 @@
-import { Component, Modal } from '../ui';
+import { Button, dom, Component, Element as El, Modal } from '../ui';
 import permalink from '../permalink/permalink';
 
 const ShareMap = function ShareMap(options = {}) {
@@ -9,14 +9,14 @@ const ShareMap = function ShareMap(options = {}) {
   const {
     localization
   } = options;
-
   function localize(key) {
     return localization.getStringByKeys({ targetParentKey: 'sharemap', targetKey: key });
   }
-
+  
   const {
     icon = '#ic_screen_share_outline_24px',
     title = localize('title'),
+    placement = ['menu'],
     storeMethod,
     serviceEndpoint
   } = options;
@@ -24,6 +24,9 @@ const ShareMap = function ShareMap(options = {}) {
   let mapMenu;
   let menuItem;
   let modal;
+  let mapTools;
+  let screenButtonContainer;
+  let screenButton;
 
   const createContent = function createContent() { // Kopiera och klistra in länken för att dela kartan.
     const shareMapInstruction = localize('shareMapInstruction');
@@ -36,6 +39,16 @@ const ShareMap = function ShareMap(options = {}) {
 
     inputElement.value = url;
     inputElement.select();
+  };
+
+  const determineLinkType = function () {
+    if (storeMethod === 'saveStateToServer') {
+      permalink.saveStateToServer(viewer).then((data) => {
+        createLink(data);
+      });
+    } else {
+      createLink();
+    }
   };
 
   return Component({
@@ -51,32 +64,63 @@ const ShareMap = function ShareMap(options = {}) {
     onAdd(evt) {
       viewer = evt.target;
       target = viewer.getId();
-      mapMenu = viewer.getControlByName('mapmenu');
-      menuItem = mapMenu.MenuItem({
-        click() {
-          mapMenu.close();
-          modal = Modal({
-            title: localize('linkToMap'),
-            content: createContent(),
-            target
-          });
-          this.addComponent(modal);
-          if (storeMethod === 'saveStateToServer') {
-            permalink.saveStateToServer(viewer).then((data) => {
-              createLink(data);
+      if (placement.indexOf('screen') > -1) {
+        mapTools = `${viewer.getMain().getMapTools().getId()}`;
+        screenButtonContainer = El({
+          tagName: 'div',
+          cls: 'flex column'
+        });
+        screenButton = Button({
+          cls: 'o-link padding-small icon-smaller round light box-shadow',
+          click() {
+            modal = Modal({
+              title: localize('linkToMap'),
+              content: createContent(),
+              target
             });
-          } else {
-            createLink();
-          }
-        },
-        icon,
-        title
-      });
-      this.addComponent(menuItem);
+            this.addComponent(modal);
+            determineLinkType()
+
+          },
+          icon,
+          tooltipText: title,
+          tooltipPlacement: 'east'
+        });
+        this.addComponent(screenButton);
+      }
+
+      if (placement.indexOf('menu') > -1) {
+        mapMenu = viewer.getControlByName('mapmenu');
+        menuItem = mapMenu.MenuItem({
+          click() {
+            mapMenu.close();
+            modal = Modal({
+              title: localize('linkToMap'),
+              content: createContent(),
+              target
+            });
+            this.addComponent(modal);
+            determineLinkType()
+          },
+          icon,
+          title
+        });
+        this.addComponent(menuItem);
+      }
       this.render();
     },
     render() {
-      mapMenu.appendMenuItem(menuItem);
+      if (placement.indexOf('screen') > -1) {
+        let htmlString = `${screenButtonContainer.render()}`;
+        let el = dom.html(htmlString);
+        document.getElementById(mapTools).appendChild(el);
+        htmlString = screenButton.render();
+        el = dom.html(htmlString);
+        document.getElementById(screenButtonContainer.getId()).appendChild(el);
+      }
+      if (placement.indexOf('menu') > -1) {
+        mapMenu.appendMenuItem(menuItem);
+      }
       this.dispatch('render');
     }
   });

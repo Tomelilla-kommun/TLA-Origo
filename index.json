@@ -13,7 +13,10 @@
       }
     },
     {
-      "name": "sharemap"
+      "name": "sharemap", 
+      "options": {
+        "placement": ["screen"]
+      }
     },
     {
       "name": "geoposition"
