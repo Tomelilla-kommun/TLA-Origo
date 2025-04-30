@@ -1,4 +1,5 @@
 build-dev
+build
 dist
 css/style.css
 node_modules

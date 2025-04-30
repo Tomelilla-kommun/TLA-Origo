@@ -23,7 +23,10 @@ module.exports = merge(common, {
         'data/*',
         'index.html',
         'index.json',
-        'img/**'
+        'img/**',
+        'tomelilla-resources/**',
+        'package.json',
+        'tomelilla.changelog.md'
       ]
     })
   ]
