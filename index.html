@@ -17,8 +17,9 @@
 </div>
 <script src="js/origo.js"></script>
 <script type="text/javascript">
-	//Init origo
-		var origo = Origo('index.json');
+	//Init origo, add timestamp to config file to avoid caching
+	var config_url = 'index.json?t=' + Date.now();
+	var origo = Origo(config_url);
 </script>
 </body>
 </html>
