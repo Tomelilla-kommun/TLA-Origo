@@ -1,3 +1,19 @@
+# TLA-Origo
+Is a fork from [origo-map/origo](https://github.com/origo-map/origo).
+
+#### Update TLA-Origo with changes from origo-map/origo from time to time:
+```bash 
+git remote add upstream https://github.com/Tomelilla-kommun/TLA-Origo
+git fetch upstream master
+git checkout master
+git merge upstream/master
+git push origin master
+git remote add upstream https://github.com/Tomelilla-kommun/TLA-Origo
+```
+Tomelilla origo configurations are maintained here:
+
+https://github.com/Tomelilla-kommun/TLA-Origo-Configs
+
 ### Two diffrent versions are presented in package.json:
 * Version
 * Tomelilla-version
