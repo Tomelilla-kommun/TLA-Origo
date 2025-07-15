@@ -9,12 +9,13 @@ git checkout master
 git merge upstream/master
 git push origin master
 git remote add upstream https://github.com/Tomelilla-kommun/TLA-Origo
+
 ```
-Tomelilla origo configurations are maintained here:
 
-https://github.com/Tomelilla-kommun/TLA-Origo-Configs
+To get a specific version of origo-map\origo, simply replace *upstream/master* with *upstream/2.9.0*
 
-### Two diffrent versions are presented in package.json:
+## Changelog
+Two diffrent versions are presented in package.json:
 * Version
 * Tomelilla-version
 
