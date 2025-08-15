@@ -1,7 +1,8 @@
-build-dev
-build
-dist
+build-dev/
+build/
+dist/
 css/style.css
-node_modules
+css/style.css.map
+node_modules/
 npm-debug-log
-plugins
+plugins/
