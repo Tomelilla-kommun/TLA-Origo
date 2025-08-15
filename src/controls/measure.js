@@ -46,6 +46,7 @@ const Measure = function Measure({
   let tempOverlayArray = [];
   const overlayArray = [];
   let viewer;
+  let measureToolbarElement;
   let measureElement;
   let measureButton;
   let lengthToolButton;
@@ -420,6 +421,8 @@ const Measure = function Measure({
   }
 
   function disableInteraction() {
+    const measureToolsBottom = document.getElementById("o-measure-tools-bottom");
+    measureToolsBottom.classList.add('hidden');
     if (activeButton) {
       document.getElementById(activeButton.getId()).classList.remove('active');
     }
@@ -461,6 +464,7 @@ const Measure = function Measure({
   }
 
   function enableInteraction() {
+    // Ändra här vad som syns
     document.getElementById(measureButton.getId()).classList.add('active');
     if (lengthTool) {
       document.getElementById(lengthToolButton.getId()).classList.remove('hidden');
@@ -498,6 +502,8 @@ const Measure = function Measure({
       name: 'measure',
       active: !isActive
     };
+    const measureToolsBottom = document.getElementById("o-measure-tools-bottom");
+    measureToolsBottom.classList.toggle('hidden');
     viewer.dispatch('toggleClickInteraction', detail);
   }
 
@@ -735,7 +741,14 @@ const Measure = function Measure({
       target = `${viewer.getMain().getMapTools().getId()}`;
       map = viewer.getMap();
       map.addLayer(vector);
-      this.addComponents(buttons);
+
+      measureToolbarElement = El({
+        cls: 'flex fixed bottom-center divider-horizontal bg-inverted z-index-ontop-high no-print small-gap',
+        style: 'height: 2rem;',
+        components: buttons
+      });    
+
+      this.addComponent(measureToolbarElement);
       this.render();
       viewer.on('toggleClickInteraction', (detail) => {
         if (detail.name === 'measure' && detail.active) {
@@ -895,57 +908,83 @@ const Measure = function Measure({
       document.getElementById(measureElement.getId()).classList.remove('hidden');
     },
     render() {
+      const targetElement = document.getElementById(viewer.getMain().getId()); //o-hidden
+      const measureEl = document.getElementById(measureElement.getId())
+      const htmlStringToolbar = `
+      <div id="o-measure-tools-bottom" class="flex no-wrap fade-in no-margin bg-grey-lightest overflow-auto hidden">
+      <div id="innerMeasureBar" class="flex fixed bottom-center divider-horizontal box-shadow bg-inverted z-index-ontop-high no-print">
+
+      </div>
+      </div>
+      `;
+
+      targetElement.appendChild(dom.html(htmlStringToolbar));
+
       let htmlString = `${measureElement.render()}`;
       let el = dom.html(htmlString);
       document.getElementById(target).appendChild(el);
       htmlString = measureButton.render();
       el = dom.html(htmlString);
       document.getElementById(measureElement.getId()).appendChild(el);
+
+      const measureElementBottomRow = El({
+        tagName: 'div',
+        cls: 'flex row fixed bottom-center divider-horizontal bg-inverted z-index-ontop-high no-print small-gap',
+        //style: 'height: 2rem;',
+      });
+      htmlString = measureElementBottomRow.render();
+      el = dom.html(htmlString);
+      document.getElementById("innerMeasureBar").appendChild(el);
+
       if (lengthTool) {
         htmlString = lengthToolButton.render();
         buttons.push(lengthToolButton);
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (areaTool) {
         htmlString = areaToolButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (elevationTool) {
         htmlString = elevationToolButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (touchMode) {
         htmlString = addNodeButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (showSegmentLengths) {
         htmlString = showSegmentLabelButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (bufferTool) {
         htmlString = bufferToolButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (toggleSnapButton) {
         htmlString = toggleSnapButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
       if (lengthTool || areaTool) {
         htmlString = undoButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
         htmlString = clearButton.render();
         el = dom.html(htmlString);
-        document.getElementById(measureElement.getId()).appendChild(el);
+        document.getElementById(measureElementBottomRow.getId()).appendChild(el);
       }
+     
+      
       this.dispatch('render');
+      //const measureToolsBottom = document.getElementById("o-measure-tools-bottom");
+      //measureToolsBottom.classList.add('hidden');
     }
   });
 };
